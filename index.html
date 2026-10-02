@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}img{max-width:100%}</style>
+<title>MyBoost</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout : une colonne large, héros en deux volets (promesse à gauche, dernier épisode à droite), puis sections empilées séparées par de l'air. */
+:root{
+  --bg:#f3f6fb; --surface:#ffffff; --ink:#0d1b3d; --muted:#55627f; --line:#d5dcea;
+  --blue:#1f4bff; --on-blue:#ffffff; --boost:#ffc93c; --on-boost:#231a00; --tint:#e4eaff;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"Instrument Sans",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0a1126; --surface:#131c3a; --ink:#eef2ff; --muted:#a3aecb; --line:#27335c;
+  --blue:#6f8cff; --on-blue:#07102b; --boost:#ffc93c; --on-boost:#231a00; --tint:#1b2752; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a1126; --surface:#131c3a; --ink:#eef2ff; --muted:#a3aecb; --line:#27335c;
+  --blue:#6f8cff; --on-blue:#07102b; --boost:#ffc93c; --on-boost:#231a00; --tint:#1b2752; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--boost);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-.02em}
+h2{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:800}
+h3{font-size:1.3rem;font-weight:700;line-height:1.2}
+p{margin:0}
+.label{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);font-weight:600}
+.lead{color:var(--muted);max-width:60ch}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding-block:14px}
+.logo{font-family:var(--display);font-weight:800;font-size:1.45rem;text-decoration:none;letter-spacing:-.03em}
+.logo span{background:var(--boost);color:var(--on-boost);padding:0 .28em;border-radius:6px;margin-left:.1em}
+.nav nav{display:flex;flex-wrap:wrap;gap:6px 22px;font-weight:500;font-size:.95rem}
+.nav nav a{text-decoration:none}
+.nav nav a:hover{color:var(--blue)}
+
+.btn{display:inline-flex;align-items:center;gap:.5em;font-weight:600;text-decoration:none;padding:.8em 1.3em;border-radius:999px;border:2px solid var(--blue);background:var(--blue);color:var(--on-blue);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn.small{padding:.55em 1em;font-size:.92rem}
+
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-block:64px 72px}
+.hero>*{min-width:0}
+.hero h1{font-size:clamp(2.6rem,7.5vw,5.2rem);font-weight:800}
+.hero h1 mark{background:var(--boost);color:var(--on-boost);padding:0 .12em;border-radius:10px}
+.hero .lead{font-size:1.15rem;margin-top:22px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+.episode{background:var(--ink);color:var(--bg);border-radius:26px;padding:28px;display:flex;flex-direction:column;gap:18px;transform:rotate(1.5deg)}
+.episode .label{color:var(--boost)}
+.episode h2{font-size:1.7rem;line-height:1.12}
+.episode p{opacity:.8;font-size:.98rem}
+.wave{display:flex;align-items:center;gap:3px;height:64px}
+.wave i{flex:1;background:var(--boost);border-radius:3px;min-width:2px}
+.play{display:flex;align-items:center;justify-content:center;gap:.6em;background:var(--boost);color:var(--on-boost);font-weight:700;text-decoration:none;padding:.9em 1.2em;border-radius:999px;transition:transform .15s}
+.play:hover{transform:scale(1.03)}
+.play svg{width:18px;height:18px}
+
+section{padding-block:64px;border-top:1px solid var(--line)}
+.head{display:flex;flex-direction:column;gap:12px;margin-bottom:36px}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.about>*{min-width:0}
+.about .text{display:flex;flex-direction:column;gap:16px}
+.prompt{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;font-family:var(--mono);font-size:.86rem;line-height:1.75;overflow-x:auto}
+.prompt .bar{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.74rem;margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}
+.prompt b{background:var(--tint);color:var(--blue);font-weight:600;padding:.1em .35em;border-radius:5px;white-space:nowrap}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card p{color:var(--muted);font-size:.97rem}
+.card .tag{font-family:var(--mono);font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.card .foot{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.price{font-family:var(--display);font-weight:800;font-size:1.6rem;font-variant-numeric:tabular-nums}
+
+.method{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)}
+.method div{padding:24px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:8px;min-width:0}
+.method div:first-child{border-left:0}
+.method .l{font-family:var(--display);font-weight:800;font-size:3rem;line-height:1;color:var(--blue)}
+.method p{color:var(--muted);font-size:.95rem}
+
+.courses{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.course{background:var(--tint);border-radius:22px;padding:30px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.course ul{margin:0;padding-left:1.1em;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.course .foot{margin-top:auto;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.band{background:var(--blue);color:var(--on-blue);border-radius:26px;padding:40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
+.band h2{max-width:16ch}
+.band .play{flex:none}
+
+footer{padding-block:36px 48px;color:var(--muted);font-size:.9rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+
+@media (max-width:860px){
+  .hero,.about{grid-template-columns:1fr}
+  .hero{padding-block:40px 48px;gap:36px}
+  .episode{transform:none}
+  .grid,.courses{grid-template-columns:1fr}
+  .method{grid-template-columns:1fr 1fr}
+  .method div:nth-child(3){border-left:0}
+  .method div:nth-child(n+3){border-top:1px solid var(--line)}
+  section{padding-block:48px}
+  .band{padding:28px}
+}
+@media (prefers-reduced-motion:reduce){.btn,.play{transition:none}}
+</style>
+
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">my<span>boost</span></a>
+    <nav>
+      <a href="#podcast">Le podcast</a>
+      <a href="#templates">Templates</a>
+      <a href="#methode">Méthode</a>
+      <a href="#formations">Formations</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <div class="hero">
+    <div>
+      <p class="label">Podcast · Templates · Formations</p>
+      <h1>Utilise l'IA <mark>pour de vrai</mark>, pas au hasard.</h1>
+      <p class="lead">MyBoost, c'est le podcast étudiant qui explique comment bien se servir de l'intelligence artificielle. On y ajoute des templates de prompts prêts à copier et des formations courtes pour passer à la pratique.</p>
+      <div class="cta">
+        <a class="btn" href="#templates">Voir les templates</a>
+        <a class="btn ghost" href="#formations">Découvrir les formations</a>
+      </div>
+    </div>
+
+    <aside class="episode" aria-label="Dernier épisode">
+      <p class="label">Dernier épisode</p>
+      <h2>Bien utiliser l'IA : les bons réflexes à prendre</h2>
+      <div class="wave" id="wave" aria-hidden="true"></div>
+      <p>On parle de ce que l'IA sait faire, de ses limites, et de la façon de lui parler pour obtenir une réponse vraiment utile.</p>
+      <!-- Remplace le # par le lien de ton épisode -->
+      <a class="play" href="https://youtu.be/sTVPFiL-DCA?feature=shared" target="_blank" rel="noopener" id="lien-podcast">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l14-8z"/></svg>
+        Écouter le dernier épisode
+      </a>
+    </aside>
+  </div>
+
+  <section id="podcast">
+    <div class="about">
+      <div class="text">
+        <p class="label">C'est quoi MyBoost ?</p>
+        <h2>Un podcast né d'un projet d'école.</h2>
+        <p class="lead">MyBoost a commencé comme un devoir : enregistrer un podcast sur un sujet qui nous concerne tous. On a choisi l'IA, parce que tout le monde l'utilise et que très peu de gens l'utilisent bien.</p>
+        <p class="lead">Dans chaque épisode, on prend une situation concrète (réviser, rédiger, s'organiser, chercher une info) et on montre comment formuler sa demande, vérifier la réponse et garder son esprit critique.</p>
+        <p class="lead">Le site prolonge le podcast : les prompts dont on parle à l'antenne deviennent des templates, et nos méthodes deviennent des formations.</p>
+      </div>
+      <div class="prompt">
+        <div class="bar"><span>template · fiche de révision</span><span>à copier</span></div>
+        Tu es un professeur de <b>[matière]</b> en <b>[niveau]</b>.<br>
+        Voici mon cours : <b>[colle ton cours]</b>.<br><br>
+        Fais-moi une fiche de révision en <b>[nombre]</b> points clés, avec un exemple pour chaque point.<br><br>
+        Termine par 5 questions pour que je me teste, sans donner les réponses tout de suite.
+      </div>
+    </div>
+  </section>
+
+  <section id="templates">
+    <div class="head">
+      <p class="label">Templates de prompts</p>
+      <h2>Des prompts prêts à remplir.</h2>
+      <p class="lead">Chaque pack contient des prompts testés, avec les parties à compléter entre crochets et un exemple de résultat.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="tag">12 prompts</span>
+        <h3>Pack Révisions</h3>
+        <p>Fiches, quiz, explications simplifiées et plans de révision pour préparer un contrôle ou un examen.</p>
+        <div class="foot"><span class="price">20 €</span><a class="btn small" href="#contact">Acheter</a></div>
+      </article>
+      <article class="card">
+        <span class="tag">15 prompts</span>
+        <h3>Pack Rédaction</h3>
+        <p>Trouver un plan, reformuler, corriger un texte et améliorer un exposé sans que l'IA écrive à ta place.</p>
+        <div class="foot"><span class="price">25 €</span><a class="btn small" href="#contact">Acheter</a></div>
+      </article>
+      <article class="card">
+        <span class="tag">10 prompts</span>
+        <h3>Pack Organisation</h3>
+        <p>Planning de la semaine, liste de tâches, préparation d'un oral ou d'un projet de groupe.</p>
+        <div class="foot"><span class="price">20 €</span><a class="btn small" href="#contact">Acheter</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="methode">
+    <div class="head">
+      <p class="label">La méthode MyBoost</p>
+      <h2>Un bon prompt tient en quatre lettres : CRTF.</h2>
+      <p class="lead">C'est la méthode qu'on répète dans le podcast. Les quatre éléments s'écrivent dans cet ordre.</p>
+    </div>
+    <div class="method">
+      <div><span class="l">C</span><h3>Contexte</h3><p>Explique ta situation : qui tu es, pour quoi tu as besoin d'aide.</p></div>
+      <div><span class="l">R</span><h3>Rôle</h3><p>Dis à l'IA qui elle doit être : un prof, un coach, un correcteur.</p></div>
+      <div><span class="l">T</span><h3>Tâche</h3><p>Demande une seule chose claire, avec un verbe précis.</p></div>
+      <div><span class="l">F</span><h3>Format</h3><p>Précise la forme de la réponse : liste, tableau, longueur, ton.</p></div>
+    </div>
+  </section>
+
+  <section id="formations">
+    <div class="head">
+      <p class="label">Formations</p>
+      <h2>Apprendre à son rythme, en vidéo.</h2>
+      <p class="lead">Des formations courtes, pensées pour des débutants, avec des exercices à faire en même temps.</p>
+    </div>
+    <div class="courses">
+      <article class="course">
+        <span class="label">Débutant · 1 h 30</span>
+        <h3>Les bases de l'IA</h3>
+        <ul>
+          <li>Comprendre comment une IA répond</li>
+          <li>Écrire son premier prompt avec la méthode CRTF</li>
+          <li>Repérer les erreurs et vérifier une réponse</li>
+        </ul>
+        <div class="foot"><span class="price">79 €</span><a class="btn small" href="#contact">S'inscrire</a></div>
+      </article>
+      <article class="course">
+        <span class="label">Intermédiaire · 3 h</span>
+        <h3>L'IA pour les études</h3>
+        <ul>
+          <li>Réviser, rédiger et préparer un oral avec l'IA</li>
+          <li>Utiliser l'IA sans tricher ni copier</li>
+          <li>Tous les packs de templates inclus</li>
+        </ul>
+        <div class="foot"><span class="price">129 €</span><a class="btn small" href="#contact">S'inscrire</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="band">
+      <div>
+        <h2>Commence par écouter.</h2>
+        <p style="margin-top:12px;max-width:44ch">Le dernier épisode est gratuit. C'est le meilleur moyen de voir si notre façon d'expliquer te convient avant d'acheter quoi que ce soit.</p>
+      </div>
+      <a class="play" href="https://youtu.be/sTVPFiL-DCA?feature=shared" target="_blank" rel="noopener" id="lien-podcast-2">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l14-8z"/></svg>
+        Écouter le podcast
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>MyBoost · projet réalisé dans le cadre d'un devoir scolaire</span>
+    <span>Les prix affichés sont des exemples.</span>
+  </footer>
+</main>
+
+<script>
+// Forme d'onde décorative de la carte épisode
+const w=document.getElementById('wave');
+for(let i=0;i<46;i++){const b=document.createElement('i');
+  b.style.height=(22+Math.abs(Math.sin(i*.55)*48+Math.sin(i*1.7)*26))+'%';w.appendChild(b);}
+</script>
+</body>
+</html>
